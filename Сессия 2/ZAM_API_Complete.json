@@ -1,0 +1,561 @@
+{
+  "info": {
+    "name": "ZAM Production API - Complete",
+    "description": "Полное API для управления производством, рецептурами, лабораторными испытаниями",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Аутентификация и Авторизация",
+      "item": [
+        {
+          "name": "Регистрация пользователя",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Login\": \"operator1\",\n  \"Password\": \"pass123\",\n  \"RoleID\": \"1\",\n  \"Email\": \"operator@test.com\",\n  \"FirstName\": \"Иван\",\n  \"LastName\": \"Петров\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/account/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "account", "register"]
+            }
+          }
+        },
+        {
+          "name": "Вход в систему (Авторизация)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Login\": \"operator1\",\n  \"Password\": \"pass123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/account/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "account", "login"]
+            }
+          },
+          "response": [
+            {
+              "name": "Успешный вход",
+              "originalRequest": {"method": "POST"},
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"token\": \"xyz123...\",\n  \"role\": \"Admin\",\n  \"userId\": 1,\n  \"login\": \"operator1\",\n  \"message\": \"Login successful\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Получить всех пользователей",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{authToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/account/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "account", "users"]
+            }
+          }
+        },
+        {
+          "name": "Получить пользователя по ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/account/users/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "account", "users", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Справочная информация (Роли)",
+      "item": [
+        {
+          "name": "Получить все роли (справочник)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "roles"]
+            }
+          }
+        },
+        {
+          "name": "Получить роль по ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/roles/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "roles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Создать новую роль",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Title\": \"Технолог\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "roles"]
+            }
+          }
+        },
+        {
+          "name": "Обновить роль",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Title\": \"Главный технолог\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/roles/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "roles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Удалить роль",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/roles/3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "roles", "3"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Рецептуры и Технологические карты",
+      "item": [
+        {
+          "name": "Получить все рецептуры",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recipes"]
+            }
+          }
+        },
+        {
+          "name": "Получить рецептуру по ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recipes", "1"]
+            }
+          }
+        },
+        {
+          "name": "Создать новую рецептуру",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Title\": \"Хлеб пшеничный\",\n  \"Description\": \"Классический пшеничный хлеб\",\n  \"Ingredients\": \"Мука пшеничная - 1кг, Вода - 600мл, Дрожжи - 10г, Соль - 15г\",\n  \"Instructions\": \"1. Замесить тесто\\n2. Расстойка 2 часа\\n3. Выпечка 40 мин при 200°C\",\n  \"PreparationTime\": 180,\n  \"CookingTime\": 40\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recipes"]
+            }
+          }
+        },
+        {
+          "name": "Обновить рецептуру",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Title\": \"Хлеб пшеничный улучшенный\",\n  \"Description\": \"С добавлением сахара\",\n  \"Ingredients\": \"Мука - 1кг, Вода - 600мл, Дрожжи - 10г, Соль - 15г, Сахар - 30г\",\n  \"Instructions\": \"Обновленная инструкция\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recipes", "1"]
+            }
+          }
+        },
+        {
+          "name": "Удалить рецептуру",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/2",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recipes", "2"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Производственные задания и партии",
+      "item": [
+        {
+          "name": "Создать производственное задание",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"RecipeId\": 1,\n  \"Quantity\": 500,\n  \"Deadline\": \"2026-05-15\",\n  \"Priority\": \"High\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/production/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "tasks"]
+            }
+          }
+        },
+        {
+          "name": "Получить все производственные задания",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/production/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "tasks"]
+            }
+          }
+        },
+        {
+          "name": "Запустить производственную партию",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"RecipeId\": 1,\n  \"Quantity\": 100,\n  \"TaskId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/production/batches/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "batches", "start"]
+            }
+          }
+        },
+        {
+          "name": "Получить все производственные партии",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/production/batches",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "batches"]
+            }
+          }
+        },
+        {
+          "name": "Получить партию по ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/production/batches/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "batches", "1"]
+            }
+          }
+        },
+        {
+          "name": "Обновить статус партии",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Status\": \"Completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/production/batches/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "batches", "1", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Ввод фактических данных цехом",
+      "item": [
+        {
+          "name": "Ввести фактические данные партии",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ActualQuantity\": 98.5,\n  \"Temperature\": 185.5,\n  \"Humidity\": 65.2,\n  \"Pressure\": 101.3,\n  \"OperatorName\": \"Иван Петров\",\n  \"Notes\": \"Небольшое отклонение температуры\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/production/batches/1/actual",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "batches", "1", "actual"]
+            }
+          }
+        },
+        {
+          "name": "Получить фактические данные партии",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/production/batches/1/actual",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "batches", "1", "actual"]
+            }
+          }
+        },
+        {
+          "name": "Ввести пооперационный контроль",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"BatchId\": 1,\n  \"OperationName\": \"Замес\",\n  \"ActualValue\": \"Консистенция нормальная\",\n  \"IsPassed\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/production/batches/1/operations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "production", "batches", "1", "operations"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Лабораторные испытания",
+      "item": [
+        {
+          "name": "Зарегистрировать лабораторное испытание",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"BatchId\": 1,\n  \"TestType\": \"Химический анализ\",\n  \"Parameter\": \"Влажность\",\n  \"ExpectedValue\": \"14%\",\n  \"ActualValue\": \"14.2%\",\n  \"IsPassed\": true,\n  \"LabTechnician\": \"Мария Смирнова\",\n  \"Notes\": \"В пределах нормы\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tests/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tests", "register"]
+            }
+          }
+        },
+        {
+          "name": "Получить все испытания партии",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/tests/batch/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tests", "batch", "1"]
+            }
+          }
+        },
+        {
+          "name": "Получить испытание по ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/tests/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tests", "1"]
+            }
+          }
+        },
+        {
+          "name": "Получить все испытания",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/tests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tests"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Отклонения",
+      "item": [
+        {
+          "name": "Зафиксировать отклонение",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"BatchId\": 1,\n  \"Type\": \"Температурное\",\n  \"Description\": \"Превышение температуры на 5°C\",\n  \"Severity\": \"High\",\n  \"DetectedBy\": \"Иванов И.И.\",\n  \"CorrectiveAction\": \"Снижение нагрева\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/deviations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "deviations"]
+            }
+          }
+        },
+        {
+          "name": "Получить все отклонения",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/deviations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "deviations"]
+            }
+          }
+        },
+        {
+          "name": "Получить отклонения партии",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/deviations/batch/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "deviations", "batch", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. События и Уведомления",
+      "item": [
+        {
+          "name": "Зафиксировать событие",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"BatchId\": 1,\n  \"EventType\": \"Start\",\n  \"Description\": \"Начало производства партии\",\n  \"Source\": \"Production\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events"]
+            }
+          }
+        },
+        {
+          "name": "Получить события партии",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/events/batch/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "batch", "1"]
+            }
+          }
+        },
+        {
+          "name": "Создать уведомление",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"UserId\": 1,\n  \"Title\": \"Отклонение в партии #1\",\n  \"Message\": \"Зафиксировано температурное отклонение\",\n  \"Type\": \"Warning\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications"]
+            }
+          }
+        },
+        {
+          "name": "Получить уведомления пользователя",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/user/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "user", "1"]
+            }
+          }
+        },
+        {
+          "name": "Отметить уведомление как прочитанное",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/1/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "1", "read"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
